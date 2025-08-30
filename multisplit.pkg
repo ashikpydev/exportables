@@ -1,0 +1,7 @@
+v 1
+d Installation package for exportables
+d Created by Ashiqur Rahman Rony
+d Date: 14 Aug 2025
+
+f ado/exportables.ado
+f help/exportables.sthlp
