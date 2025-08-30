@@ -1,10 +1,8 @@
-*! version 2.2.0
 *! exportables.sthlp
 *! Author: Ashikur Rahman
-*! Contact: [Your email or GitHub link]
-*! Description: Help file for exportables.ado
+*! Description: Export survey tables to Excel
 
-{\ttitle exportables — Export survey tables to Excel with totals and two-decimal percentages}
+{\ttitle exportables — Export survey tables to Excel}
 
 {\b Syntax}
 
@@ -14,60 +12,28 @@ exportables [, using(filename.xlsx)]
 
 {\b Description}
 
-{\tt exportables} generates frequency tables for all variables in the current dataset and exports them to an Excel file. It supports both:
+Exports frequency tables of all variables in the dataset to an Excel file. Supports:
 
-1. Single-select variables (numeric variables with value labels).
-2. Multi-select variables (dummy-coded variables with names like `var_1`, `var_2`, …).
-
-For single-select variables:
-
-- Each option is listed with frequency and percent.
-- A total row is added at the bottom.
-- Percentages are rounded to 2 decimal places.
-
-For multi-select variables:
-
-- Each child variable is listed with frequency, percent of responses, and percent of cases.
-- Percentages are rounded to 2 decimal places.
-- A total row of responses is included.
+- Single-select variables: frequency, percent (2 decimals), total row included.
+- Multi-select variables: frequency, percent of responses, percent of cases, total row included.
+- Automatically skips _oth and _rank columns in multi-select variables.
 
 {\b Options}
 
 \begin{tabular}{lp{10cm}}
-{\tt using(filename.xlsx)} & Name of the Excel file to create. The file will be replaced if it already exists. \\
+{\tt using(filename.xlsx)} & Name of the Excel file to create (will replace if exists). \\
 \end{tabular}
 
-{\b Examples}
-
-Export all tables to an Excel file named `all_tables.xlsx`:
+{\b Example}
 
 \begin{verbatim}
 . exportables, using("all_tables.xlsx")
 \end{verbatim}
 
-This will create a sheet called `AllTables` with formatted frequency tables for all variables in the dataset.
+Exports all survey tables to `all_tables.xlsx` with formatted totals and percentages.
 
-{\b Notes}
+{\b Author}
 
-- Single-select variables must have value labels assigned.
-- Multi-select variables should be numeric dummy-coded (0/1) and follow a naming convention `var_1`, `var_2`, etc.
-- Columns `_oth` or `_rank` are automatically excluded from multi-select tables.
-- Totals and percentages are formatted for research reporting.
+Ashikur Rahman  
 
-{\b Author and Credits}
-
-Author: Ashikur Rahman  
-Contact: [Your email or GitHub link]  
-
-This ado was inspired by common survey reporting needs in humanitarian and social science research, aiming to automate the tedious process of creating clean Excel frequency tables with totals and percentages.  
-
-Contributions welcome via GitHub or email.
-
-{\b Version History}
-
-2.2.0 — Added total row for single-select, two-decimal percentages, fixed rounding in Excel.  
-2.1.0 — Initial release supporting both single-select and multi-select tables.  
-
-{\b See Also}
-
-\hyperlink{tabstat}{tabstat}, \hyperlink{tabulate}{tabulate}, \hyperlink{putexcel}{putexcel}, \hyperlink{levelsof}{levelsof}
+Credits: Developed for automated survey reporting in Stata.
