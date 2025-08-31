@@ -46,46 +46,21 @@ processes all eligible variables in the dataset.
 
 {pstd}
 This command is intended for survey datasets where select-one and select-multiple 
-questions need to be tabulated for reporting purposes.  
+questions need to be tabulated for reporting purposes.
 
 {pstd}
 By default:
+
 {pmore}- For single-select variables: the program produces a frequency table with counts, 
   percentages (reported to two decimal places), and a total row.  
+
 {pmore}- For multiple-select variables: the program produces a multiple-response table 
   summarizing the distribution across the grouped items.
 
 {title:Examples}
 
 {phang}{cmd:. exportables, using("all_tables.xlsx")}{p_end}
-{pmore}Exports all variables into {it:all_tables.xlsx}.{p_end}
+{pmore}Exports all variables into {it:all_tables.xlsx}.
 
 {phang}{cmd:. exportables s2_5 s2_11, using("selected_tables.xlsx")}{p_end}
-{pmore}Exports only {it:s2_5} and {it:s2_11} into {it:selected_tables.xlsx}.{p_end}
-
-{title:Stored results}
-
-{pstd}
-{cmd:exportables} does not store results in memory. All output is written directly to Excel.
-
-{title:Author}
-
-{pstd}
-Ashiqur Rahman Rony  
-Email: {browse "mailto:ashiqurrahman.stat@gmail.com":ashiqurrahman.stat@gmail.com}
-
-{title:Contributors / Acknowledgements}
-
-{pstd}
-Special thanks to {bf:Md. Redoan Hossain Bhuiyan}  
-Email: {browse "mailto:redoanhossain630@gmail.com":redoanhossain630@gmail.com}  
-for providing the initial idea and prototype that inspired this program.  
-This package significantly improves on the initial version by addressing its limitations.
-
-{title:Also see}
-
-{psee}
-Manual: {bf:[R] putexcel}, {bf:[R] tabulate}, {bf:[R] table}
-
-{psee}
-Online: {manhelp putexcel R}, {manhelp tabulate R}
+{pmore}Exports only {it:s2_5} and {it:s2_11} into {it:selected_tables.xlsx}.
