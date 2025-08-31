@@ -1,39 +1,89 @@
-*! exportables.sthlp
-*! Author: Ashikur Rahman
-*! Description: Export survey tables to Excel
+{smcl}
+{* *! version 1.0.0 31aug2025 Ashikur Rahman}
+{cmd:help exportables}
+{hline}
 
-{\ttitle exportables — Export survey tables to Excel}
+{title:Title}
 
-{\b Syntax}
+{phang}
+{bf:exportables} {hline 2} Export frequency and multiple response tables to Excel.
 
-\begin{verbatim}
-exportables [, using(filename.xlsx)]
-\end{verbatim}
+{title:Syntax}
 
-{\b Description}
+{p 8 15 2}
+{cmd:exportables}
+[{varlist}]
+{cmd:,} {opt using(filename)}
 
-Exports frequency tables of all variables in the dataset to an Excel file. Supports:
+{synoptset 20 tabbed}{...}
+{synopthdr}
+{synoptline}
+{synopt:{opt using(filename)}}Specify the Excel file to which tables are exported. Required.{p_end}
+{synopt:{it:varlist}}Optional list of variables to export. If omitted, all variables are processed.{p_end}
+{synoptline}
 
-- Single-select variables: frequency, percent (2 decimals), total row included.
-- Multi-select variables: frequency, percent of responses, percent of cases, total row included.
-- Automatically skips _oth and _rank columns in multi-select variables.
+{title:Description}
 
-{\b Options}
+{pstd}
+{cmd:exportables} creates clean frequency tables for single-select variables and multiple-response 
+tables for select-multiple variables, and writes them directly to an Excel file.
 
-\begin{tabular}{lp{10cm}}
-{\tt using(filename.xlsx)} & Name of the Excel file to create (will replace if exists). \\
-\end{tabular}
+{pstd}
+The program distinguishes automatically between single- and multiple-select variables based 
+on variable naming patterns (e.g., {it:var_1 var_2 var_3 ...} are grouped together).  
 
-{\b Example}
+{pstd}
+Percentages are reported with two decimal places, and totals are included for single-select variables.
 
-\begin{verbatim}
-. exportables, using("all_tables.xlsx")
-\end{verbatim}
+{title:Options}
 
-Exports all survey tables to `all_tables.xlsx` with formatted totals and percentages.
+{phang}
+{opt using(filename)} specifies the Excel file where output tables will be written. The file is created 
+or replaced at the first export.
 
-{\b Author}
+{phang}
+{it:varlist} allows exporting only a subset of variables. If no variables are specified, the program 
+processes all eligible variables in the dataset.
 
-Ashikur Rahman  
+{title:Remarks}
 
-Credits: Developed for automated survey reporting in Stata.
+{pstd}
+This command is designed for survey datasets where select-one and select-multiple questions 
+need to be summarized for reporting.  
+
+{pstd}
+By default:
+{pmore}- Single-select variables → frequency + percent + total.
+{pmore}- Multiple-select variables → cross-tab style multiple-response tables.
+
+{title:Examples}
+
+{phang}{cmd:. exportables, using("all_tables.xlsx")}{p_end}
+{pmore}Exports all variables into {it:all_tables.xlsx}.{p_end}
+
+{phang}{cmd:. exportables s2_5 s2_11, using("selected_tables.xlsx")}{p_end}
+{pmore}Exports only {it:s2_5} and {it:s2_11} into {it:selected_tables.xlsx}.{p_end}
+
+{title:Stored results}
+
+{pstd}
+{cmd:exportables} does not store results in memory. All output is written to Excel.
+
+{title:Author}
+
+{pstd}
+Written by Ashikur Rahman ({browse "mailto:ashikur.rahman@email.com":ashikur.rahman@email.com})
+
+{title:Acknowledgements}
+
+{pstd}
+This package builds on best practices in survey data cleaning and tabulation.  
+Special thanks to collaborators and users who provided feedback.
+
+{title:Also see}
+
+{psee}
+Manual: {bf:[R] putexcel}, {bf:[R] tabulate}, {bf:[R] table}
+
+{psee}
+Online: {manhelp putexcel R}, {manhelp tabulate R}
