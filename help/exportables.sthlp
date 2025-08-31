@@ -1,12 +1,12 @@
 {smcl}
-{* *! version 1.0.0 31aug2025 Ashikur Rahman}
+{* *! version 1.0.0 31aug2025 Ashiqur Rahman}
 {cmd:help exportables}
 {hline}
 
 {title:Title}
 
 {phang}
-{bf:exportables} {hline 2} Export frequency and multiple-response tables to Excel
+{bf:exportables} {hline 2} Export frequency and multiple-response tables to Excel.
 
 {title:Syntax}
 
@@ -74,15 +74,13 @@ By default:
 Ashiqur Rahman Rony  
 Email: {browse "mailto:ashiqurrahman.stat@gmail.com":ashiqurrahman.stat@gmail.com}
 
-{title:Acknowledgements}
-
-{pstd}
-This package builds on best practices in survey data cleaning and tabulation.  
+{title:Contributors / Acknowledgements}
 
 {pstd}
 Special thanks to {bf:Md. Redoan Hossain Bhuiyan}  
 Email: {browse "mailto:redoanhossain630@gmail.com":redoanhossain630@gmail.com}  
 for providing the initial idea and prototype that inspired this program.  
+This package significantly improves on the initial version by addressing its limitations.
 
 {title:Also see}
 
