@@ -6,7 +6,7 @@
 {title:Title}
 
 {phang}
-{bf:exportables} {hline 2} Export frequency and multiple response tables to Excel.
+{bf:exportables} {hline 2} Export frequency and multiple-response tables to Excel
 
 {title:Syntax}
 
@@ -15,7 +15,7 @@
 [{varlist}]
 {cmd:,} {opt using(filename)}
 
-{synoptset 20 tabbed}{...}
+{synoptset 25 tabbed}{...}
 {synopthdr}
 {synoptline}
 {synopt:{opt using(filename)}}Specify the Excel file to which tables are exported. Required.{p_end}
@@ -29,17 +29,14 @@
 tables for select-multiple variables, and writes them directly to an Excel file.
 
 {pstd}
-The program distinguishes automatically between single- and multiple-select variables based 
-on variable naming patterns (e.g., {it:var_1 var_2 var_3 ...} are grouped together).  
-
-{pstd}
-Percentages are reported with two decimal places, and totals are included for single-select variables.
+The program distinguishes automatically between single- and multiple-select variables 
+based on variable naming patterns (for example, {it:var_1 var_2 var_3 ...} are grouped together).  
 
 {title:Options}
 
 {phang}
-{opt using(filename)} specifies the Excel file where output tables will be written. The file is created 
-or replaced at the first export.
+{opt using(filename)} specifies the Excel file where output tables will be written. The file is 
+created or replaced at the first export.
 
 {phang}
 {it:varlist} allows exporting only a subset of variables. If no variables are specified, the program 
@@ -48,13 +45,15 @@ processes all eligible variables in the dataset.
 {title:Remarks}
 
 {pstd}
-This command is designed for survey datasets where select-one and select-multiple questions 
-need to be summarized for reporting.  
+This command is intended for survey datasets where select-one and select-multiple 
+questions need to be tabulated for reporting purposes.  
 
 {pstd}
 By default:
-{pmore}- Single-select variables → frequency + percent + total.
-{pmore}- Multiple-select variables → cross-tab style multiple-response tables.
+{pmore}- For single-select variables: the program produces a frequency table with counts, 
+  percentages (reported to two decimal places), and a total row.  
+{pmore}- For multiple-select variables: the program produces a multiple-response table 
+  summarizing the distribution across the grouped items.
 
 {title:Examples}
 
@@ -67,18 +66,23 @@ By default:
 {title:Stored results}
 
 {pstd}
-{cmd:exportables} does not store results in memory. All output is written to Excel.
+{cmd:exportables} does not store results in memory. All output is written directly to Excel.
 
 {title:Author}
 
 {pstd}
-Written by Ashikur Rahman ({browse "mailto:ashikur.rahman@email.com":ashikur.rahman@email.com})
+Ashiqur Rahman Rony  
+Email: {browse "mailto:ashiqurrahman.stat@gmail.com":ashiqurrahman.stat@gmail.com}
 
 {title:Acknowledgements}
 
 {pstd}
 This package builds on best practices in survey data cleaning and tabulation.  
-Special thanks to collaborators and users who provided feedback.
+
+{pstd}
+Special thanks to {bf:Md. Redoan Hossain Bhuiyan}  
+Email: {browse "mailto:redoanhossain630@gmail.com":redoanhossain630@gmail.com}  
+for providing the initial idea and prototype that inspired this program.  
 
 {title:Also see}
 
