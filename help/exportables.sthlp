@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.0.0 31aug2025 Ashiqur Rahman}
+{* *! version 1.0.0 31aug2025 Ashikur Rahman}
 {cmd:help exportables}
 {hline}
 
@@ -11,9 +11,7 @@
 {title:Syntax}
 
 {p 8 15 2}
-{cmd:exportables}
-[{varlist}]
-{cmd:,} {opt using(filename)}
+{cmd:exportables} [{varlist}] [, {opt using(filename)}]
 
 {synoptset 25 tabbed}{...}
 {synopthdr}
@@ -52,7 +50,7 @@ questions need to be tabulated for reporting purposes.
 By default:
 
 {pmore}- For single-select variables: the program produces a frequency table with counts, 
-  percentages (reported to two decimal places), and a total row.  
+  percentages (reported to two decimal places), and a total row.
 
 {pmore}- For multiple-select variables: the program produces a multiple-response table 
   summarizing the distribution across the grouped items.
@@ -64,3 +62,32 @@ By default:
 
 {phang}{cmd:. exportables s2_5 s2_11, using("selected_tables.xlsx")}{p_end}
 {pmore}Exports only {it:s2_5} and {it:s2_11} into {it:selected_tables.xlsx}.
+
+{title:Stored results}
+
+{pstd}
+{cmd:exportables} does not store results in memory. All output is written directly to Excel.
+
+{title:Author}
+
+{pstd}
+Ashiqur Rahman Rony  
+Email: {browse "mailto:ashiqurrahman.stat@gmail.com":ashiqurrahman.stat@gmail.com}
+
+{title:Acknowledgements}
+
+{pstd}
+This package builds on best practices in survey data cleaning and tabulation.  
+
+{pstd}
+Special thanks to {bf:Md. Redoan Hossain Bhuiyan}  
+Email: {browse "mailto:redoanhossain630@gmail.com":redoanhossain630@gmail.com}  
+for providing the initial idea and prototype that inspired this program.  
+
+{title:Also see}
+
+{psee}
+Manual: {bf:[R] putexcel}, {bf:[R] tabulate}, {bf:[R] table}
+
+{psee}
+Online: {manhelp putexcel R}, {manhelp tabulate R}, {manhelp table R}
