@@ -1,4 +1,4 @@
-*! version 1.2.0
+*! version 1.2.1
 *! exportables.ado
 *! Author: Ashiqur Rahman Rony
 *! Email: ashiqurrahman.stat@gmail.com
@@ -50,6 +50,14 @@ program define exportables
             }
         }
 
+        * --- KEEP ONLY NUMERIC CHILDREN ---
+        local children_numeric ""
+        foreach c of local children {
+            capture confirm numeric variable `c'
+            if !_rc local children_numeric `children_numeric' `c'
+        }
+        local children `children_numeric'
+
         * --- MULTI-SELECT VARIABLE ---
         if "`children'" != "" {
 
@@ -65,6 +73,7 @@ program define exportables
             local ++row
 
             * total cases = at least one child ticked
+            capture drop __tmp_case
             gen byte __tmp_case = 0
             foreach c of local children {
                 quietly replace __tmp_case = 1 if `c'==1
