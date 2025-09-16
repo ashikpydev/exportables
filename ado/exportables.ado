@@ -1,12 +1,18 @@
 *! version 1.2.1
-*! exportables.ado
-*! Author: Ashiqur Rahman Rony
+*! exportables_fixed.ado
+*! Author: Ashiqur Rahman Rony (fixed by ChatGPT)
 *! Email: ashiqurrahman.stat@gmail.com
 *! Organization: Development Research Initiative (dRi)
-*! Description: Export single-select and multi-select survey tables to Excel
-*!              with totals and percentages (rounded to two decimals)
-*!              Automatically handles split variables for multi-select questions.
-*!              Optional variable selection added: by default exports all, or only selected.
+*! Description: Same as exportables.ado but fixes rounding error so that
+*!              the printed percentages sum to exactly 100.00 for each table.
+*!
+*! Strategy used:
+*!  - Compute raw percentages in Stata and round them to 2 decimals.
+*!  - Compute the rounding residual (100 - sum(rounded percentages)).
+*!  - Add the residual to the option with largest frequency (common tie-breaker).
+*!    This guarantees the row-wise displayed percentages sum to exactly 100.00.
+*!  - This approach avoids writing prematurely-rounded values to Excel and then
+*!    showing a non-100 total (e.g., 99.22) caused by cumulative rounding.
 
 capture program drop exportables
 program define exportables
@@ -89,21 +95,73 @@ program define exportables
                 local total_resp = `total_resp' + r(N)
             }
 
-            * loop over children
+            * --------- First pass: collect freqs and rounded percentages ---------
+            local freqslist ""
+            local pctroundlist_resp ""
+            local pctroundlist_cases ""
+            local sum_round_resp = 0
+            local sum_round_cases = 0
+            local maxfreq = -1
+            local maxidx = 1
+            local idx = 1
+
+            foreach c of local children {
+                quietly count if `c'==1
+                local freq = r(N)
+                local freqslist `freqslist' `freq'
+
+                if `total_resp' > 0 {
+                    local pct_r_resp = round(100*`freq'/`total_resp', 0.01)
+                }
+                else {
+                    local pct_r_resp = 0
+                }
+
+                if `total_cases' > 0 {
+                    local pct_r_cases = round(100*`freq'/`total_cases', 0.01)
+                }
+                else {
+                    local pct_r_cases = 0
+                }
+
+                local pctroundlist_resp `pctroundlist_resp' `pct_r_resp'
+                local pctroundlist_cases `pctroundlist_cases' `pct_r_cases'
+                local sum_round_resp = `sum_round_resp' + `pct_r_resp'
+                local sum_round_cases = `sum_round_cases' + `pct_r_cases'
+
+                if `freq' > `maxfreq' {
+                    local maxfreq = `freq'
+                    local maxidx = `idx'
+                }
+                local ++idx
+            }
+
+            local resid_resp = 100 - `sum_round_resp'
+            local resid_cases = 100 - `sum_round_cases'
+
+            * --------- Second pass: write values to Excel, adjusting the largest cell ---------
+            local i = 1
             foreach c of local children {
                 local clabel : variable label `c'
                 if "`clabel'" == "" local clabel = "`c'"
 
-                quietly count if `c'==1
-                local freq = r(N)
-                local pct_resp = cond(`total_resp'>0, 100*`freq'/`total_resp', .)
-                local pct_cases = cond(`total_cases'>0, 100*`freq'/`total_cases', .)
+                local freq_val : word `i' of `freqslist'
+                local pct_write_resp : word `i' of `pctroundlist_resp'
+                local pct_write_cases : word `i' of `pctroundlist_cases'
+
+                if `i' == `maxidx' {
+                    quietly capture confirm number `pct_write_resp'
+                    if _rc local pct_write_resp = `pct_write_resp' + `resid_resp'
+                    quietly capture confirm number `pct_write_cases'
+                    if _rc local pct_write_cases = `pct_write_cases' + `resid_cases'
+                }
 
                 putexcel A`row' = "`clabel'", border(all)
-                putexcel B`row' = `freq', border(all)
-                putexcel C`row' = `=round(`pct_resp',0.01)', border(all)
-                putexcel D`row' = `=round(`pct_cases',0.01)', border(all)
+                putexcel B`row' = `freq_val', border(all)
+                putexcel C`row' = `pct_write_resp', border(all)
+                putexcel D`row' = `pct_write_cases', border(all)
                 local ++row
+                local ++i
             }
 
             * totals row
@@ -131,29 +189,69 @@ program define exportables
                 putexcel C`row' = "Percent", bold border(all)
                 local ++row
 
+                * denominator = number of non-missing responses for this variable
+                quietly count if !missing(`v')
+                local denom = r(N)
+
                 levelsof `v', local(options)
-                local total = 0
+
+                * --------- First pass: compute freqs and rounded percentages ---------
+                local freqslist ""
+                local pctroundlist ""
+                local sum_round = 0
+                local maxfreq = -1
+                local maxidx = 1
+                local i = 1
+
                 foreach opt of local options {
                     quietly count if `v'==`opt'
                     local freq = r(N)
-                    local total = `total' + `freq'
+                    local freqslist `freqslist' `freq'
 
-                    local txt = "`opt'"
-                    if "`valuelabel'" != "" {
-                        local lbl : label (`valuelabel') `opt'
-                        if "`lbl'" != "" local txt = "`lbl'"
+                    if `denom' > 0 {
+                        local pct_r = round(100*`freq'/`denom', 0.01)
+                    }
+                    else {
+                        local pct_r = 0
                     }
 
-                    local pct = cond(`total'>0, 100*`freq'/`=_N', .)
-                    putexcel A`row' = "`txt'", border(all)
-                    putexcel B`row' = `freq', border(all)
-                    putexcel C`row' = `=round(`pct',0.01)', border(all)
+                    local pctroundlist `pctroundlist' `pct_r'
+                    local sum_round = `sum_round' + `pct_r'
+
+                    if `freq' > `maxfreq' {
+                        local maxfreq = `freq'
+                        local maxidx = `i'
+                    }
+                    local ++i
+                }
+
+                local resid = 100 - `sum_round'
+
+                * --------- Second pass: write rows, adjust the largest option ---------
+                local i = 1
+                foreach opt of local options {
+                    local lbl = "`opt'"
+                    if "`valuelabel'" != "" {
+                        local lbl2 : label (`valuelabel') `opt'
+                        if "`lbl2'" != "" local lbl = "`lbl2'"
+                    }
+
+                    local freq_val : word `i' of `freqslist'
+                    local pct_val : word `i' of `pctroundlist'
+                    if `i' == `maxidx' {
+                        local pct_val = `pct_val' + `resid'
+                    }
+
+                    putexcel A`row' = "`lbl'", border(all)
+                    putexcel B`row' = `freq_val', border(all)
+                    putexcel C`row' = `pct_val', border(all)
                     local ++row
+                    local ++i
                 }
 
                 * Total row for single-select
                 putexcel A`row' = "Total", bold border(all)
-                putexcel B`row' = `total', bold border(all)
+                putexcel B`row' = `denom', bold border(all)
                 putexcel C`row' = 100, bold border(all)
                 local ++row
                 local ++row
