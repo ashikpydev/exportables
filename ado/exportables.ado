@@ -1,6 +1,6 @@
 *! version 1.2.1
 *! exportables_fixed.ado
-*! Author: Ashiqur Rahman Rony (fixed by ChatGPT)
+*! Author: Ashiqur Rahman Rony
 *! Email: ashiqurrahman.stat@gmail.com
 *! Organization: Development Research Initiative (dRi)
 *! Description: Same as exportables.ado but fixes rounding error so that
